@@ -18,9 +18,9 @@ class RecursionSearch(BackgroundTaskThread):
         """Check if any of the destination functions callback to a caller function
         """
         found = []
-        for caller_func, entries in self.call_dests.iteritems():
+        for caller_func, entries in self.call_dests.items():
             for entry in entries:
-                if not self.call_dests.has_key(entry['callee']):
+                if not entry['callee'] in self.call_dests.keys():
                     continue
 
                 for entry2 in self.call_dests[entry['callee']]:
@@ -60,7 +60,7 @@ class RecursionSearch(BackgroundTaskThread):
 
                         # craft markdown type
                         self.markdown += "**type**: {}\n\n".format(direct_indirect)
-                        
+
                         # craft markdown caller instruction
                         self.markdown += "**{:08x}**: ```{}```\n\n".format(
                             entry['caller'], self.view.get_disassembly(entry['caller']))
@@ -76,7 +76,7 @@ class RecursionSearch(BackgroundTaskThread):
                         if instr.dest.operation != MediumLevelILOperation.MLIL_CONST_PTR:
                             continue
 
-                        if not self.call_dests.has_key(func_addr):
+                        if not func_addr in self.call_dests.keys():
                             self.call_dests[func_addr] = [{'caller' : instr.address, 'callee' : instr.dest.constant},]
                         else:
                             self.call_dests[func_addr].append({'caller' : instr.address, 'callee' : instr.dest.constant})
@@ -88,7 +88,7 @@ class RecursionSearch(BackgroundTaskThread):
             self.view.show_markdown_report("Recursive Function Search", self.markdown)
         else:
             show_message_box(
-                "Recursion search", 
+                "Recursion search",
                 "Could not find any recursive logic"
             )
         self.progress = ""

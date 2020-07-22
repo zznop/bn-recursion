@@ -6,7 +6,7 @@ def find_recursion(view):
     rec_search.start()
 
 PluginCommand.register(
-    "Find recursive logic",
+    "bn-recursion: Find recursive logic",
     "Search for direct and indirect recursion",
     find_recursion
 )
